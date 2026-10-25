@@ -1,16 +1,33 @@
 package interpreter.model.stmt;
 
 import interpreter.exceptions.MyException;
+import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
 import interpreter.model.exp.IExp;
+import interpreter.model.value.BoolValue;
+import interpreter.model.value.IValue;
 
 public record IfStmt(IExp cond, IStmt thenS, IStmt elseS) implements IStmt {
     // S5: c = eval(cond); push thenS if c is true, otherwise push elseS
     // errors: c is not a bool -> StatementException
     @Override
     public PrgState execute(PrgState state) throws MyException {
-        throw new UnsupportedOperationException("TODO");
+        IValue result;
+
+        result = cond.eval(state.getSymTable());
+
+
+        if( ! (result instanceof BoolValue(boolean c))) throw new StatementException("condition is not a boolean.");
+        if(c)
+            state.getExeStack().push(thenS);
+        else
+            state.getExeStack().push(elseS);
+
+        return state;
     }
 
-    // TODO: override toString
+    @Override
+    public String toString() {
+        return "(if " + cond +  " then " + thenS + " else " + elseS + ")";
+    }
 }

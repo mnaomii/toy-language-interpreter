@@ -7,8 +7,11 @@ public record NopStmt() implements IStmt {
     // S6: does nothing
     @Override
     public PrgState execute(PrgState state) throws MyException {
-        throw new UnsupportedOperationException("TODO");
+        return state;
     }
 
-    // TODO: override toString
+    @Override
+    public String toString() {
+        return "nop";
+    }
 }

@@ -1,6 +1,7 @@
 package interpreter.model.stmt;
 
 import interpreter.exceptions.MyException;
+import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
 import interpreter.model.type.IType;
 
@@ -9,8 +10,14 @@ public record VarDeclStmt(String name, IType type) implements IStmt {
     // errors: name already declared -> StatementException
     @Override
     public PrgState execute(PrgState state) throws MyException {
-        throw new UnsupportedOperationException("TODO");
+        if(state.getSymTable().isDefined(name)) throw new StatementException("Name already declared.");
+        state.getSymTable().put(name,type.defaultValue());
+
+        return state;
     }
 
-    // TODO: override toString
+    @Override
+    public String toString() {
+        return type + " " + name;
+    }
 }

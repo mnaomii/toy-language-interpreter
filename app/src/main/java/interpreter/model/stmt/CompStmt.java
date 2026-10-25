@@ -7,8 +7,14 @@ public record CompStmt(IStmt first, IStmt second) implements IStmt {
     // S1: push second, then first (so first runs next)
     @Override
     public PrgState execute(PrgState state) throws MyException {
-        throw new UnsupportedOperationException("TODO");
+        state.getExeStack().push(second);
+        state.getExeStack().push(first);
+
+        return state;
     }
 
-    // TODO: override toString
+    @Override
+    public String toString() {
+        return "(" + first + "; " + second + ")";
+    }
 }
