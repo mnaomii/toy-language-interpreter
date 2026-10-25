@@ -1,7 +1,15 @@
 package interpreter.model.exp;
 
 public enum ArithOp {
-    ADD, SUB, MUL, DIV
+    ADD("+"), SUB("-"), MUL("*"), DIV("/");
 
-    // TODO: give each operator its symbol (+ - * /) for printing
+    private final String symbol;
+    ArithOp(String symbol){
+        this.symbol = symbol;
+    }
+
+    @Override
+    public String toString(){
+        return symbol;
+    }
 }

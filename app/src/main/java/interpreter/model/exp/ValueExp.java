@@ -8,8 +8,11 @@ public record ValueExp(IValue value) implements IExp {
     // E1: a constant evaluates to itself
     @Override
     public IValue eval(IDictionary<String, IValue> symTable) throws MyException {
-        throw new UnsupportedOperationException("TODO");
+        return value;
     }
 
-    // TODO: override toString
+    @Override
+    public String toString(){
+        return String.valueOf(value);
+    }
 }

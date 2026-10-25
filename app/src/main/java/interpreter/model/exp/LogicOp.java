@@ -1,7 +1,15 @@
 package interpreter.model.exp;
 
 public enum LogicOp {
-    AND, OR
+    AND("and"), OR("or");
 
-    // TODO: give each operator its symbol (and, or) for printing
+    // enum -> only valid choices go through
+
+    private final String sym;
+    LogicOp(String sym){ this.sym = sym;}
+
+    @Override
+    public String toString(){
+        return sym;
+    }
 }
