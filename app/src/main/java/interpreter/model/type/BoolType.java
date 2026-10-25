@@ -1,13 +1,18 @@
 package interpreter.model.type;
 
+import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 
 public record BoolType() implements IType {
     // default(bool) = false
     @Override
     public IValue defaultValue() {
-        throw new UnsupportedOperationException("TODO");
+
+        return new BoolValue(false);
     }
 
-    // TODO: override toString to return "bool"
+    @Override
+    public String toString(){
+        return "bool";
+    }
 }
