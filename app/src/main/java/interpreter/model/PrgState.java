@@ -7,9 +7,9 @@ import interpreter.model.stmt.IStmt;
 import interpreter.model.value.IValue;
 
 public class PrgState {
-    private IStack<IStmt> exeStack;
-    private IDictionary<String, IValue> symTable;
-    private IList<IValue> out;
+    private IStack<IStmt> exeStack; // like a call stack
+    private IDictionary<String, IValue> symTable; // symbols table
+    private IList<IValue> out; // stdout -like
     private final IStmt originalProgram;
 
     // stores the three structures and the program, then pushes the program on the ExeStack
@@ -19,7 +19,7 @@ public class PrgState {
         this.symTable = symTable;
         this.out = out;
         this.originalProgram = program;
-        
+
         this.exeStack.push(program);
     }
 
