@@ -1,0 +1,15 @@
+package interpreter.model.exp;
+
+import interpreter.exceptions.MyException;
+import interpreter.model.adt.IDictionary;
+import interpreter.model.value.IValue;
+
+public record ValueExp(IValue value) implements IExp {
+    // E1: a constant evaluates to itself
+    @Override
+    public IValue eval(IDictionary<String, IValue> symTable) throws MyException {
+        throw new UnsupportedOperationException("TODO");
+    }
+
+    // TODO: override toString
+}
