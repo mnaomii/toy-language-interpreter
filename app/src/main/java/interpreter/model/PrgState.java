@@ -15,36 +15,47 @@ public class PrgState {
     // stores the three structures and the program, then pushes the program on the ExeStack
     public PrgState(IStack<IStmt> exeStack, IDictionary<String, IValue> symTable,
                     IList<IValue> out, IStmt program) {
-        throw new UnsupportedOperationException("TODO");
+        this.exeStack = exeStack;
+        this.symTable = symTable;
+        this.out = out;
+        this.originalProgram = program;
+        
+        this.exeStack.push(program);
     }
 
     public IStack<IStmt> getExeStack() {
-        throw new UnsupportedOperationException("TODO");
+        return exeStack;
     }
 
     public IDictionary<String, IValue> getSymTable() {
-        throw new UnsupportedOperationException("TODO");
+        return symTable;
     }
 
     public IList<IValue> getOut() {
-        throw new UnsupportedOperationException("TODO");
+        return out;
     }
 
     public IStmt getOriginalProgram() {
-        throw new UnsupportedOperationException("TODO");
+        return originalProgram;
     }
 
     public void setExeStack(IStack<IStmt> exeStack) {
-        throw new UnsupportedOperationException("TODO");
+        this.exeStack = exeStack;
     }
 
     public void setSymTable(IDictionary<String, IValue> symTable) {
-        throw new UnsupportedOperationException("TODO");
+        this.symTable = symTable;
     }
 
     public void setOut(IList<IValue> out) {
-        throw new UnsupportedOperationException("TODO");
+        this.out = out;
     }
 
-    // TODO: override toString to show ExeStack, SymTable and Out
+    @Override
+    public String toString() {
+        return "Exestack : " + exeStack.toString() + "\nOut: "
+                + out.toString() + "\nSymTable: " + symTable.toString();
+
+
+    }
 }
