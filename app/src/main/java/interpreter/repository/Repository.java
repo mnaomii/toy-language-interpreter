@@ -10,11 +10,11 @@ public class Repository implements IRepository {
 
     // stores the given program state in the list
     public Repository(PrgState state) {
-        throw new UnsupportedOperationException("TODO");
+        states.add(state);
     }
 
     @Override
     public PrgState getCrtPrg() {
-        throw new UnsupportedOperationException("TODO");
+        return states.getLast();
     }
 }

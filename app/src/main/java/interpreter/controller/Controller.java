@@ -1,7 +1,9 @@
 package interpreter.controller;
 
 import interpreter.exceptions.MyException;
+import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
+import interpreter.model.stmt.IStmt;
 import interpreter.repository.IRepository;
 
 public class Controller {
@@ -9,23 +11,39 @@ public class Controller {
     private final boolean displayFlag;
 
     public Controller(IRepository repo, boolean displayFlag) {
-        throw new UnsupportedOperationException("TODO");
+
+        this.repo = repo;
+        this.displayFlag = displayFlag;
     }
 
     // pops the top statement and executes it (one rule S1-S6)
     // errors: empty ExeStack -> StatementException
     public PrgState oneStep(PrgState state) throws MyException {
-        throw new UnsupportedOperationException("TODO");
+        if(state.getExeStack().isEmpty()) throw new StatementException("Nothing to execute");
+
+        IStmt statement = state.getExeStack().pop();
+        statement.execute(state);
+
+        return state;
     }
 
     // takes the current program from the repository and runs oneStep until the ExeStack is empty,
     // displaying the state at the start and after every step
     public void allStep() throws MyException {
-        throw new UnsupportedOperationException("TODO");
+
+        PrgState program = repo.getCrtPrg();
+        if(displayFlag) display(program);
+
+        while (!program.getExeStack().isEmpty()) {
+            oneStep(program);
+            if(displayFlag) display(program);
+
+        }
+
     }
 
     // prints the state, but only if displayFlag is on
     private void display(PrgState state) {
-        throw new UnsupportedOperationException("TODO");
+        System.out.print(state.toString() + "\n\n");
     }
 }
