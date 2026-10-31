@@ -4,9 +4,6 @@ import interpreter.controller.Controller;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.ViewException;
 import interpreter.model.PrgState;
-import interpreter.model.adt.MyDictionary;
-import interpreter.model.adt.MyList;
-import interpreter.model.adt.MyStack;
 import interpreter.model.stmt.IStmt;
 import interpreter.repository.Repository;
 
@@ -65,7 +62,7 @@ public class View {
     private void runProgram() throws MyException {
         if(program == null) throw new ViewException("Select a program first.");
 
-        PrgState state = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(), program);
+        PrgState state = PrgState.of(program);
         Controller controller = new Controller(new Repository(state), true);
         controller.allStep();
     }

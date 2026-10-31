@@ -4,6 +4,8 @@ import interpreter.exceptions.ADTException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyListTest {
@@ -42,5 +44,14 @@ class MyListTest {
     void getOutOfBoundsThrows() {
         list.add(10);
         assertThrows(ADTException.class, () -> list.get(1));
+    }
+
+    // toList keeps the order the elements were added in
+    @Test
+    void toListKeepsInsertionOrder() {
+        list.add(10);
+        list.add(20);
+        list.add(30);
+        assertEquals(List.of(10, 20, 30), list.toList());
     }
 }
