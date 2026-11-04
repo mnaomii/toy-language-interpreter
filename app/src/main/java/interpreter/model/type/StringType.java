@@ -6,7 +6,6 @@ import interpreter.model.value.IValue;
 public record StringType() implements IType {
     @Override
     public IValue defaultValue() {
-
         return new StringValue("");
     }
 
