@@ -63,7 +63,7 @@ public class View {
         if(program == null) throw new ViewException("Select a program first.");
 
         PrgState state = PrgState.of(program);
-        Controller controller = new Controller(new Repository(state), true);
+        Controller controller = new Controller(new Repository(state, "log.txt"), true);
         controller.allStep();
     }
 }

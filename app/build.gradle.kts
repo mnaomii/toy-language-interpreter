@@ -23,6 +23,7 @@ application {
 
 tasks.named<JavaExec>("run") {   // keyboard input for the text menu
     standardInput = System.`in`
+    workingDir = rootDir   // test.in and the log files are in the project root
 }
 
 tasks.named<Test>("test") {

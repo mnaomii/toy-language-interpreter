@@ -27,15 +27,17 @@ public class Controller {
         return state;
     }
 
-    // takes the current program from the repository and runs oneStep until the ExeStack is empty,
-    // displaying the state at the start and after every step
+    // takes the current program from the repository and runs oneStep until the ExeStack is empty;
+    // the state at the start and after every step is always logged, and displayed if displayFlag is on
     public void allStep() throws MyException {
 
         PrgState program = repo.getCrtPrg();
+        repo.logPrgStateExec();
         if(displayFlag) display(program);
 
         while (!program.getExeStack().isEmpty()) {
             oneStep(program);
+            repo.logPrgStateExec();
             if(displayFlag) display(program);
 
         }

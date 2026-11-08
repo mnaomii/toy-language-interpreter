@@ -9,15 +9,21 @@ import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ControllerTest {
+    @TempDir
+    Path dir;   // a new empty folder for every test, deleted afterwards
 
-    // runs a whole program (display off) and returns the final state
+    // runs a whole program (display off, log in the temp folder) and returns the final state
     private PrgState run(IStmt program) throws MyException {
         PrgState state = PrgState.of(program);
-        Controller controller = new Controller(new Repository(state), false);
+        Controller controller = new Controller(new Repository(state, dir.resolve("log.txt").toString()), false);
         controller.allStep();
         return state;
     }
@@ -50,7 +56,18 @@ class ControllerTest {
     @Test
     void oneStepOnEmptyStackThrows() throws MyException {
         PrgState state = run(new NopStmt());   // after this the stack is empty
-        Controller controller = new Controller(new Repository(state), false);
+        Controller controller = new Controller(new Repository(state, dir.resolve("log.txt").toString()), false);
         assertThrows(StatementException.class, () -> controller.oneStep(state));
+    }
+
+    // after allStep the log has the four sections in this order, even with display off
+    @Test
+    void logFileContainsTheFourSectionsInOrder() throws Exception {
+        run(Examples.EX1);
+
+        String log = Files.readString(dir.resolve("log.txt"));
+        int a = log.indexOf("ExeStack:"), b = log.indexOf("SymTable:"),
+            c = log.indexOf("Out:"), d = log.indexOf("FileTable:");
+        assertTrue(0 <= a && a < b && b < c && c < d);
     }
 }
