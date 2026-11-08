@@ -52,6 +52,37 @@ class ControllerTest {
         assertEquals(new IntValue(2), state.getOut().get(0));
     }
 
+    // Ex4 on a file with 15 and 50 prints both numbers and closes the file at the end
+    @Test
+    void fileExampleReadsBothNumbersAndClosesTheFile() throws Exception {
+        Path in = dir.resolve("test.in");
+        Files.writeString(in, "15\n50\n");
+        PrgState state = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(15), state.getOut().get(0));
+        assertEquals(new IntValue(50), state.getOut().get(1));
+        assertTrue(state.getFileTable().toMap().isEmpty());
+    }
+
+    // Ex4 on an empty file prints 0 twice, because both reads hit the end of the file
+    @Test
+    void fileExampleOnEmptyFilePrintsZeroTwice() throws Exception {
+        Path in = dir.resolve("empty.in");
+        Files.writeString(in, "");
+        PrgState state = run(Examples.fileExample(in.toString()));
+        assertEquals(new IntValue(0), state.getOut().get(0));
+        assertEquals(new IntValue(0), state.getOut().get(1));
+        assertTrue(state.getFileTable().toMap().isEmpty());
+    }
+
+    // Ex5: 5 < 7, so only the then branch runs and prints 5
+    @Test
+    void example5PrintsFive() throws MyException {
+        PrgState state = run(Examples.EX5);
+        assertTrue(state.getExeStack().isEmpty());
+        assertEquals(1, state.getOut().size());
+        assertEquals(new IntValue(5), state.getOut().get(0));
+    }
+
     // one more step after the program ended gives a StatementException
     @Test
     void oneStepOnEmptyStackThrows() throws MyException {
