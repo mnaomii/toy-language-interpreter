@@ -20,7 +20,7 @@ public record AssignStmt(String id, IExp exp) implements IStmt {
 
         if( v == null) throw new StatementException("Variable not declared.");
 
-        IValue result = exp.eval(state.getSymTable());
+        IValue result = exp.eval(state.getSymTable(), state.getHeap());
         if( !( result.getType().equals(v.getType()) ) ) throw new StatementException("Assignment to wrong type.");
 
         state.getSymTable().update(id, result);

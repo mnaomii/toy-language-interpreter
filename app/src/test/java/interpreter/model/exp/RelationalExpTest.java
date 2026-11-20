@@ -3,7 +3,9 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
@@ -14,10 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RelationalExpTest {
     private IDictionary<String, IValue> symTable;
+    private IHeap heap;
 
     @BeforeEach
     void setUp() {
         symTable = new MyDictionary<>();
+        heap = new MyHeap();
     }
 
     // shortcut: num(2) is the constant expression 2
@@ -27,7 +31,7 @@ class RelationalExpTest {
 
     // shortcut: compare(LT, 1, 2) evaluates (1 < 2)
     private IValue compare(RelOp op, int a, int b) throws MyException {
-        return new RelationalExp(op, num(a), num(b)).eval(symTable);
+        return new RelationalExp(op, num(a), num(b)).eval(symTable, heap);
     }
 
     // 1 < 2 is true, 2 < 2 is false
@@ -76,14 +80,14 @@ class RelationalExpTest {
     @Test
     void nonIntegerFirstOperandThrows() {
         IExp e = new RelationalExp(RelOp.LT, new ValueExp(new BoolValue(true)), num(1));
-        assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
     }
 
     // 1 < true gives an ExpressionException
     @Test
     void nonIntegerSecondOperandThrows() {
         IExp e = new RelationalExp(RelOp.LT, num(1), new ValueExp(new BoolValue(true)));
-        assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
     }
 
     // printed in infix form, as in the log and the menu

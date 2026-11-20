@@ -13,7 +13,7 @@ public record PrintStmt(IExp exp) implements IStmt {
     public PrgState execute(PrgState state) throws MyException {
         IValue result;
 
-        result = exp.eval(state.getSymTable());
+        result = exp.eval(state.getSymTable(), state.getHeap());
 
         state.getOut().add(result);
 

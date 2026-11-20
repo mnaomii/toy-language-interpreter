@@ -3,7 +3,9 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.BoolValue;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
@@ -14,12 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LogicExpTest {
     private IDictionary<String, IValue> symTable;
+    private IHeap heap;
     private IExp trueExp;
     private IExp falseExp;
 
     @BeforeEach
     void setUp() {
         symTable = new MyDictionary<>();
+        heap = new MyHeap();
         trueExp = new ValueExp(new BoolValue(true));
         falseExp = new ValueExp(new BoolValue(false));
     }
@@ -28,41 +32,41 @@ class LogicExpTest {
     @Test
     void andOfTrueAndTrueIsTrue() throws MyException {
         IExp e = new LogicExp(LogicOp.AND, trueExp, trueExp);
-        assertEquals(new BoolValue(true), e.eval(symTable));
+        assertEquals(new BoolValue(true), e.eval(symTable, heap));
     }
 
     // true and false = false
     @Test
     void andOfTrueAndFalseIsFalse() throws MyException {
         IExp e = new LogicExp(LogicOp.AND, trueExp, falseExp);
-        assertEquals(new BoolValue(false), e.eval(symTable));
+        assertEquals(new BoolValue(false), e.eval(symTable, heap));
     }
 
     // true or false = true
     @Test
     void orOfTrueAndFalseIsTrue() throws MyException {
         IExp e = new LogicExp(LogicOp.OR, trueExp, falseExp);
-        assertEquals(new BoolValue(true), e.eval(symTable));
+        assertEquals(new BoolValue(true), e.eval(symTable, heap));
     }
 
     // false or false = false
     @Test
     void orOfFalseAndFalseIsFalse() throws MyException {
         IExp e = new LogicExp(LogicOp.OR, falseExp, falseExp);
-        assertEquals(new BoolValue(false), e.eval(symTable));
+        assertEquals(new BoolValue(false), e.eval(symTable, heap));
     }
 
     // 1 and true gives an ExpressionException
     @Test
     void nonBooleanFirstOperandThrows() {
         IExp e = new LogicExp(LogicOp.AND, new ValueExp(new IntValue(1)), trueExp);
-        assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
     }
 
     // true or 1 gives an ExpressionException
     @Test
     void nonBooleanSecondOperandThrows() {
         IExp e = new LogicExp(LogicOp.OR, trueExp, new ValueExp(new IntValue(1)));
-        assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
     }
 }

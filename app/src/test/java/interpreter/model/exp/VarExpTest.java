@@ -3,7 +3,9 @@ package interpreter.model.exp;
 import interpreter.exceptions.ExpressionException;
 import interpreter.exceptions.MyException;
 import interpreter.model.adt.IDictionary;
+import interpreter.model.adt.IHeap;
 import interpreter.model.adt.MyDictionary;
+import interpreter.model.adt.MyHeap;
 import interpreter.model.value.IValue;
 import interpreter.model.value.IntValue;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VarExpTest {
     private IDictionary<String, IValue> symTable;
+    private IHeap heap;
 
     @BeforeEach
     void setUp() {
         symTable = new MyDictionary<>();
+        heap = new MyHeap();
     }
 
     // a variable evaluates to its value in the SymTable
@@ -24,13 +28,13 @@ class VarExpTest {
     void definedVariableReturnsItsValue() throws MyException {
         symTable.put("a", new IntValue(2));
         IExp e = new VarExp("a");
-        assertEquals(new IntValue(2), e.eval(symTable));
+        assertEquals(new IntValue(2), e.eval(symTable, heap));
     }
 
     // a variable that is not in the SymTable gives an ExpressionException
     @Test
     void undefinedVariableThrows() {
         IExp e = new VarExp("a");
-        assertThrows(ExpressionException.class, () -> e.eval(symTable));
+        assertThrows(ExpressionException.class, () -> e.eval(symTable, heap));
     }
 }
