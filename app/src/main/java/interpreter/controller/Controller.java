@@ -38,7 +38,7 @@ public class Controller {
         while (!program.getExeStack().isEmpty()) {
             oneStep(program);
             repo.logPrgStateExec();
-            program.getHeap().setContent(GarbageCollector.unsafeGarbageCollector(
+            program.getHeap().setContent(GarbageCollector.safeGarbageCollector(
                     GarbageCollector.getAddrFromSymTable(program.getSymTable().toMap().values()),
                     program.getHeap().getContent()));
             repo.logPrgStateExec();
