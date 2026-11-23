@@ -12,6 +12,7 @@ import interpreter.model.stmt.VarDeclStmt;
 import interpreter.model.type.IntType;
 import interpreter.model.type.RefType;
 import interpreter.model.value.IntValue;
+import interpreter.model.value.RefValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -88,6 +90,50 @@ class ControllerTest {
         assertTrue(state.getExeStack().isEmpty());
         assertEquals(1, state.getOut().size());
         assertEquals(new IntValue(5), state.getOut().get(0));
+    }
+
+    // Ex6 prints the two references; both locations stay in the heap
+    @Test
+    void example6PrintsTheReferences() throws MyException {
+        PrgState state = run(Examples.EX6);
+        var v = new RefValue(1, new IntType());
+        var a = new RefValue(2, new RefType(new IntType()));
+        assertEquals(List.of(v, a), state.getOut().toList());
+        assertEquals(Map.of("v", v, "a", a), state.getSymTable().toMap());
+        assertEquals(Map.of(1, new IntValue(20), 2, v), state.getHeap().getContent());
+    }
+
+    // Ex7 reads through one and two references: prints 20 and 25
+    @Test
+    void example7PrintsTwentyAndTwentyFive() throws MyException {
+        PrgState state = run(Examples.EX7);
+        assertEquals(List.of(new IntValue(20), new IntValue(25)), state.getOut().toList());
+        assertEquals(Map.of(1, new IntValue(20), 2, new RefValue(1, new IntType())),
+                state.getHeap().getContent());
+    }
+
+    // Ex8 overwrites location 1 with 30: prints 20 and 35
+    @Test
+    void example8PrintsTwentyAndThirtyFive() throws MyException {
+        PrgState state = run(Examples.EX8);
+        assertEquals(List.of(new IntValue(20), new IntValue(35)), state.getOut().toList());
+        assertEquals(Map.of("v", new RefValue(1, new IntType())), state.getSymTable().toMap());
+        assertEquals(Map.of(1, new IntValue(30)), state.getHeap().getContent());
+    }
+
+    // Ex9 prints 20, because the safe collector keeps location 1 (reachable through a)
+    @Test
+    void example9PrintsTwenty() throws MyException {
+        PrgState state = run(Examples.EX9);
+        assertEquals(List.of(new IntValue(20)), state.getOut().toList());
+    }
+
+    // Ex10 counts down from 4, then prints the final 0
+    @Test
+    void example10CountsDownToZero() throws MyException {
+        PrgState state = run(Examples.EX10);
+        assertEquals(List.of(new IntValue(4), new IntValue(3), new IntValue(2), new IntValue(1), new IntValue(0)),
+                state.getOut().toList());
     }
 
     // one more step after the program ended gives a StatementException
