@@ -3,8 +3,14 @@ package interpreter.controller;
 import interpreter.exceptions.MyException;
 import interpreter.exceptions.StatementException;
 import interpreter.model.PrgState;
+import interpreter.model.exp.ValueExp;
+import interpreter.model.stmt.CompStmt;
 import interpreter.model.stmt.IStmt;
+import interpreter.model.stmt.NewStmt;
 import interpreter.model.stmt.NopStmt;
+import interpreter.model.stmt.VarDeclStmt;
+import interpreter.model.type.IntType;
+import interpreter.model.type.RefType;
 import interpreter.model.value.IntValue;
 import interpreter.repository.Repository;
 import interpreter.view.Examples;
@@ -13,6 +19,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,6 +96,15 @@ class ControllerTest {
         PrgState state = run(new NopStmt());   // after this the stack is empty
         Controller controller = new Controller(new Repository(state, dir.resolve("log.txt").toString()), false);
         assertThrows(StatementException.class, () -> controller.oneStep(state));
+    }
+
+    // Ref int v; new(v, 20); new(v, 30): after the second new, location 1 is garbage and gets removed
+    @Test
+    void garbageCollectorRunsAfterEveryStep() throws MyException {
+        PrgState state = run(new CompStmt(new VarDeclStmt("v", new RefType(new IntType())),
+                new CompStmt(new NewStmt("v", new ValueExp(new IntValue(20))),
+                        new NewStmt("v", new ValueExp(new IntValue(30))))));
+        assertEquals(Map.of(2, new IntValue(30)), state.getHeap().getContent());
     }
 
     // after allStep the log has the five sections in this order, even with display off

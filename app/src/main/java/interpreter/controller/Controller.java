@@ -38,6 +38,10 @@ public class Controller {
         while (!program.getExeStack().isEmpty()) {
             oneStep(program);
             repo.logPrgStateExec();
+            program.getHeap().setContent(GarbageCollector.unsafeGarbageCollector(
+                    GarbageCollector.getAddrFromSymTable(program.getSymTable().toMap().values()),
+                    program.getHeap().getContent()));
+            repo.logPrgStateExec();
             if(displayFlag) display(program);
 
         }
